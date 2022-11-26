@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slideshow Page Creator</title>
+    <link rel="stylesheet" href="slideshowpage.css">
+  </head>
+  <body>
+    <div class="image-file-chooser">
+      <label class="slideshow-button" for="image-chooser">Choose Photos</label>
+      <input type="file" id="image-chooser" name="image_chooser[]" multiple>
+      <p>Thumbnails of chosen images will display below</p>
+    </div>
+
+    <form method="post" class="slideshow-form" action="./create_slideshowpage.php" enctype="multipart/form-data">
+      <div class="slideshow-image-preview" id="image-preview"></div>
+
+      <div class="slideshow-controls">
+        <fieldset class="group-photos-container">
+          <label>Add Caption to Group:
+            <input type="checkbox" id="name-to-caption">
+          </label>
+          <label>Photo Group Caption
+            <input type="text" id="image-group-name" disabled>
+          </label>
+          <button class="slideshow-button" type="button" id="group-images">Group Selected Photos</button>
+        </fieldset>
+
+        <div class="slideshow-properties-container">
+          <p>Slideshow Type:</p>
+          <input name="slideshow_type" id="course-radio" type="radio" value="Course" checked>
+          <label for="course-radio">Course</label>
+          <input name="slideshow_type" id="trip-radio" type="radio" value="Trip">
+          <label for="trip-radio">Trip</label>
+    
+          <fieldset class="slideshow-properties course">
+            <legend>Course Properties</legend>
+            <label for="organization">Organization
+              <select name="organization" id="organization">
+                <option value="ABC">A Brighter Child</option>
+                <option value="FLA">Foothill Learning Academy</option>
+              </select>
+            </label>
+            <label for="min-grade">Minimum Grade
+              <select name="min_grade" id="min-grade">
+                <option value="K">Kindergarten</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </label>
+            <label for="max-grade">Maximum Grade
+              <select name="max_grade" id="max-grade">
+                <option value="K">Kindergarten</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </label>
+            <label for="day">Class Day
+              <select name="day" id="day">
+                <option value="Mon">Monday</option>
+                <option value="Tue">Tuesday</option>
+                <option value="Wed">Wednesday</option>
+                <option value="Thu">Thursday</option>
+                <option value="Fri">Friday</option>
+              </select>
+            </label>
+            <fieldset class="class-time">
+              <legend>Class Time</legend>
+              <input type="radio" id="morning" name="class_time" value="M">
+              <label for="morning">Morning</label>
+              <input type="radio" id="afternoon" name="class_time" value="A">
+              <label for="afternoon">Afternoon</label>
+            </fieldset>
+            <label for="season">Class Season
+              <select name="season" id="season">
+                <option value="Fall">Fall</option>
+                <option value="Winter">Winter</option>
+                <option value="Spring">Spring</option>
+                <option value="Summer">Summer</option>
+              </select>
+            </label>
+            <label for="year">Class Year
+              <select name="year" id="year">
+                <option value="2021">2021</option>
+                <option value="2022" selected>2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+              </select>
+            </label>
+          </fieldset>
+  
+          <fieldset class="slideshow-properties trip">
+            <legend>Trip Properties</legend>
+            <label for="trip-location">Location
+              <input id="trip-location" name="location" type="text">
+            </label>
+            <label for="trip-year">Year
+              <select name="year" id="trip-year">
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2018">2018</option>
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022" selected>2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+              </select>
+            </label>
+          </fieldset>
+        </div>
+  
+        <div class="slideshow-button-group">
+          <button class="slideshow-button" id="append-slideshow">Add to Slideshow</button>
+          <button class="slideshow-button" type="submit" id="create-slideshow">
+            Create Slideshow
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+    <script src="slideshowpage.js"></script>
+  </body>
+</html>
