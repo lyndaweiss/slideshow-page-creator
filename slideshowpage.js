@@ -10,6 +10,19 @@ const createSlideshow = document.querySelector('#create-slideshow');
 let selectedThumbnails = {thumbnail: [], name: []};
 let imageGroups = [];
 
+handleFormSubmit = async ev => {
+  ev.preventDefault();
+  const slideshowData = new FormData(slideshowForm);
+  slideshowData.append('new_append', ev.target.value);
+  slideshowData.append('projects', JSON.stringify(imageGroups));
+  const resp = await fetch('create_slideshowpage.php', {
+    method: 'POST',
+    body: slideshowData,
+  });
+  const result = await resp.json();
+  console.log(result);
+}
+
 const handleKeyPress = ev => {
   if (ev.key === 'Delete') {
     // console.log(ev.target, selectedThumbnails.thumbnail.indexOf(ev.target.children[0]));
@@ -93,27 +106,8 @@ groupImages.addEventListener('click', () => {
   console.log(imageGroups);
 });
 
-appendSlideshow.addEventListener('click', async ev => {
-  ev.preventDefault();
-  const slideshowData = new FormData(slideshowForm);
-  slideshowData.append('projects', JSON.stringify(imageGroups));
-  const resp = await fetch('append_slideshowpage.php', {
-    method: 'POST',
-    body: slideshowData,
-  });
-  const result = await resp.json();
-  console.log(result.html);
-  console.log(result.bytes);
-});
+appendSlideshow.addEventListener('click', handleFormSubmit);
+createSlideshow.addEventListener('click', handleFormSubmit);
+// console.log(result.html);
+// console.log(result.bytes);
 
-createSlideshow.addEventListener('click', async ev => {
-  ev.preventDefault();
-  const slideshowData = new FormData(slideshowForm);
-  slideshowData.append('image_groups', JSON.stringify(imageGroups));
-  const resp = await fetch('create_slideshowpage.php', {
-    method: 'POST',
-    body: slideshowData,
-  });
-  const result = await resp.json();
-  console.log(result);
-});
