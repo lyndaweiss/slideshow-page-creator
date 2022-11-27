@@ -8,6 +8,7 @@
     private $slideshowTimes = ['M', 'A'];
     private $slideshowSeasons = ['Winter', 'Spring', 'Summer', 'Fall'];
     private $slideshowGrades = ['K', '1', '2', '3', '4', '5', '6', '7', '8'];
+    private $slideshowNewAppend = ['append', 'new'];
 
     public function validateSlideshowInput($inp, $inpArray) {
       if (!in_array($inp, $inpArray, true)) {
@@ -38,6 +39,10 @@
   
     public function validateGrade($inp) {
       return $this->validateSlideshowInput($inp, $this->slideshowGrades);
+    }
+  
+    public function validateNewAppend($inp) {
+      return $this->validateSlideshowInput($inp, $this->slideshowNewAppend);
     }
   
     public function validateYear($inp) {
