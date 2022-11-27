@@ -10,7 +10,7 @@ const createSlideshow = document.querySelector('#create-slideshow');
 let selectedThumbnails = {thumbnail: [], name: []};
 let imageGroups = [];
 
-handleFormSubmit = async ev => {
+const handleFormSubmit = async ev => {
   ev.preventDefault();
   const slideshowData = new FormData(slideshowForm);
   slideshowData.append('new_append', ev.target.value);
@@ -23,10 +23,17 @@ handleFormSubmit = async ev => {
   console.log(result);
 }
 
-const handleKeyPress = ev => {
-  if (ev.key === 'Delete') {
-    // console.log(ev.target, selectedThumbnails.thumbnail.indexOf(ev.target.children[0]));
-  }
+const handleThumbnailDelete = ev => {
+  const selectedThumbnail = ev.target.parentElement;
+  const thumbnailImage = selectedThumbnail.children.namedItem('image_names[]').value;
+  const thumbnailNameIndex = selectedThumbnails.name.indexOf(thumbnailImage);
+  console.log(selectedThumbnail, thumbnailImage, thumbnailNameIndex);
+  // remove from selectedThumbnails
+  selectedThumbnails.thumbnail.splice(thumbnailNameIndex, 1);
+  selectedThumbnails.name.splice(thumbnailNameIndex, 1);
+  // TODO: image groups - find and delete!
+  // remove thumbnail container and children
+  selectedThumbnail.remove();
 }
 
 const handleThumbnailClick = ev => {
@@ -55,8 +62,14 @@ imageChooser.addEventListener('change', ev => {
     const thumbnailContainer = document.createElement('div');
     thumbnailContainer.tabIndex = -1;
     thumbnailContainer.classList.add('thumbnail-container');
-    thumbnailContainer.addEventListener('keydown', handleKeyPress);
     imagePreview.appendChild(thumbnailContainer);
+
+    // Add delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.textContent = 'x';
+    deleteButton.addEventListener('click', handleThumbnailDelete);
+    thumbnailContainer.appendChild(deleteButton);
 
     const photoFile = imageChooser.files[i];
     const photo = document.createElement('img');
