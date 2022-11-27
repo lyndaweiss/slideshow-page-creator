@@ -15,6 +15,8 @@ class CourseSlideshow implements Slideshow {
   private $classTime;
   private $captions;
   private $imageGroups;
+  private $newAppend;
+  private $showFileName;
 
   public function __construct($slideData) {
     $this->season = $slideData['season'];
@@ -26,9 +28,16 @@ class CourseSlideshow implements Slideshow {
     $this->classTime = isset($slideData['class_time']) ? $slideData['class_time'] : '';
     $this->captions = $slideData['caption'];
     $this->imageGroups = json_decode($slideData['image_groups']);
+    $this->newAppend = $slideData['new_append'];
+
+    $this->showFileName = $this->organization . $this->minGrade . "-" . $this->maxGrade . $this->day . 
+                          $this->classTime . $this->season . $this->year . ".html";
   }
 
   public function slideshowTemplate() {
+    if ($this->newAppend === 'append') {
+      return file_get_contents(__DIR__ . "/../pages/" . $this->showFileName);    
+    }
     return file_get_contents(__DIR__ . "/../templates/course.html");    
   }
 
@@ -62,7 +71,7 @@ class CourseSlideshow implements Slideshow {
 
   public function slideshowFile(string $pageHtml) {
     $filepath = 'pages';
-    $filename = $this->organization . $this->minGrade . "-" . $this->maxGrade . $this->day . $this->classTime . $this->season . $this->year . ".html";
+    $filename = $this->showFileName;
     $fp = fopen("$filepath/$filename", 'w');
     $result = fwrite($fp, $pageHtml);
     fclose($fp);

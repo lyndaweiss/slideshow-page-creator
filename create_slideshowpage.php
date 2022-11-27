@@ -29,6 +29,7 @@
       'min_grade' => ['filter'=>FILTER_CALLBACK, 'options'=>[$validator, 'validateGrade']],
       'max_grade' => ['filter'=>FILTER_CALLBACK, 'options'=>[$validator, 'validateGrade']],
       'location' => ['filter'=>FILTER_CALLBACK, 'options'=>[$validator, 'sanitizeInput']],
+      'new_append' => ['filter'=>FILTER_CALLBACK, 'options'=>[$validator, 'validateNewAppend']],
     ]
   );
 
@@ -44,6 +45,13 @@
   $slideshowService = new SlideshowService($slideshow);
   $slideshowCreated = $slideshowService->createSlideshow();
   echo json_encode($slideshowCreated);
+  
+  // echo json_encode([
+  //   'post' => $_POST, 
+  //   'validated' => $validatedCourseInputs,
+    // 'html' => $slideshow,
+    // 'bytes' => $bytes_written
+  // ]);
 
   // Copy image files to webpage image directory
   /*
