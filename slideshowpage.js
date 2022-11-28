@@ -30,7 +30,12 @@ const handleThumbnailDelete = ev => {
   // remove from selectedThumbnails
   selectedThumbnails.thumbnail.splice(thumbnailNameIndex, 1);
   selectedThumbnails.name.splice(thumbnailNameIndex, 1);
-  // TODO: image groups - find and delete!
+  // If image is in a group - find and remove
+  if ('groupNumber' in selectedThumbnail.dataset) {
+    const groupIndex = parseInt(selectedThumbnail.dataset.groupNumber);
+    const imageIndex = imageGroups[groupIndex].indexOf(thumbnailImage);
+    imageGroups[groupIndex].splice(imageIndex, 1);
+  }
   // remove thumbnail container and children
   selectedThumbnail.remove();
 }
