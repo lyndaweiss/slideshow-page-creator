@@ -107,10 +107,13 @@ nameToCaption.addEventListener('change', toggleNameToCaption);
 
 groupImages.addEventListener('click', () => {
   imageGroups.push([...selectedThumbnails.name]);
+  const groupNumber = imageGroups.length - 1;
   selectedThumbnails.thumbnail.forEach (thumbnail => {
     thumbnail.classList.remove('selected');
+    const thumbnailParent = thumbnail.parentElement;
+    thumbnailParent.dataset.groupNumber = groupNumber;
     if (!imageGroupName.disabled) {
-      thumbnail.parentElement.querySelector('.caption').value = imageGroupName.value;
+      thumbnailParent.querySelector('.caption').value = imageGroupName.value;
     }
   });
   selectedThumbnails.thumbnail = [];
