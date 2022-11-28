@@ -27,7 +27,6 @@ const handleThumbnailDelete = ev => {
   const selectedThumbnail = ev.target.parentElement;
   const thumbnailImage = selectedThumbnail.children.namedItem('image_names[]').value;
   const thumbnailNameIndex = selectedThumbnails.name.indexOf(thumbnailImage);
-  console.log(selectedThumbnail, thumbnailImage, thumbnailNameIndex);
   // remove from selectedThumbnails
   selectedThumbnails.thumbnail.splice(thumbnailNameIndex, 1);
   selectedThumbnails.name.splice(thumbnailNameIndex, 1);
@@ -66,8 +65,9 @@ imageChooser.addEventListener('change', ev => {
 
     // Add delete button
     const deleteButton = document.createElement('button');
+    deleteButton.classList.add('slideshow-button')
     deleteButton.type = 'button';
-    deleteButton.textContent = 'x';
+    deleteButton.textContent = '✖';
     deleteButton.addEventListener('click', handleThumbnailDelete);
     thumbnailContainer.appendChild(deleteButton);
 

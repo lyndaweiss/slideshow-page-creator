@@ -75,7 +75,14 @@ fieldset {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: calc(var(--thumbnail-dimension) + 1rem);
+  width: calc(var(--thumbnail-dimension) + 1.125rem);
+  border: 1px solid lightgray;
+}
+
+.thumbnail-container > button {
+  background-color: transparent;
+  font-weight: bold;
+  margin-left: auto;
 }
 
 .thumbnail-container > label {
