@@ -72,6 +72,7 @@ imageChooser.addEventListener('change', ev => {
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('slideshow-button')
     deleteButton.type = 'button';
+    deleteButton.ariaLabel = 'Remove Thumbnail';
     deleteButton.textContent = '✖';
     deleteButton.addEventListener('click', handleThumbnailDelete);
     thumbnailContainer.appendChild(deleteButton);
