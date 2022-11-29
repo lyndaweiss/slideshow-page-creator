@@ -70,10 +70,9 @@ imageChooser.addEventListener('change', ev => {
 
     // Add delete button
     const deleteButton = document.createElement('button');
-    deleteButton.classList.add('slideshow-button')
+    deleteButton.classList.add('slideshow-button', 'delete-button')
     deleteButton.type = 'button';
     deleteButton.ariaLabel = 'Remove Thumbnail';
-    deleteButton.textContent = '✖';
     deleteButton.addEventListener('click', handleThumbnailDelete);
     thumbnailContainer.appendChild(deleteButton);
 
