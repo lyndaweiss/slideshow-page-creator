@@ -7,13 +7,19 @@
   require('Slideshow/CourseSlideshow.php');
   require('Slideshow/TripSlideshow.php');
 
-  use Slideshow\SlideshowService;
-  use Slideshow\SlideshowValidator;
+  use Backend\Slideshow\SlideshowService;
+  use Backend\Slideshow\SlideshowValidator;
 
   $slideshows = [
-    'Course' => 'Slideshow\\CourseSlideshow',
-    'Trip' => 'Slideshow\\TripSlideshow',
+    'Course' => 'Backend\\Slideshow\\CourseSlideshow',
+    'Trip' => 'Backend\\Slideshow\\TripSlideshow',
   ];
+
+  // echo json_encode([
+  //   'post' => $_POST, 
+  // ]);
+
+  // die();
 
   // Validate input
   $validator = new SlideshowValidator();

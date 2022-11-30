@@ -1,9 +1,9 @@
 <?php
-namespace Slideshow;
+namespace Backend\Slideshow;
 
 require_once('Slideshow.php');
 
-use Slideshow\Slideshow;
+use Backend\Slideshow\Slideshow;
 
 class TripSlideshow implements Slideshow {
   private $imageNames;
@@ -43,7 +43,7 @@ class TripSlideshow implements Slideshow {
   }
 
   public function slideshowFile(string $pageHtml) {
-    $filepath = 'trips';
+    $filepath = __DIR__ . '/../../trips';
     $filename = $this->year . str_replace(' ', '', $this->location) . "_slideshow.html";
     $fp = fopen("$filepath/$filename", 'w');
     $result = fwrite($fp, $pageHtml);

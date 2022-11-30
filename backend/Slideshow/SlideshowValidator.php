@@ -1,5 +1,5 @@
 <?php
-  namespace Slideshow;
+  namespace Backend\Slideshow;
 
   class SlideshowValidator {
     private $slideshowTypes = ['Course', 'Trip'];

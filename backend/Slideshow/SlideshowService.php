@@ -1,9 +1,9 @@
 <?php
-namespace Slideshow;
+namespace Backend\Slideshow;
 
 require_once('Slideshow.php');
 
-use Slideshow\Slideshow;
+use Backend\Slideshow\Slideshow;
 
 class SlideshowService {
   private $slideshow;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Slideshow;
+namespace Backend\Slideshow;
 
 interface Slideshow {
   const SLIDE_START = "\t<li class=\"card\" data-target=\"card\">";

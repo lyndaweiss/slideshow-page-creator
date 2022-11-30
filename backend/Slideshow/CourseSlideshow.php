@@ -1,9 +1,9 @@
 <?php
-namespace Slideshow;
+namespace Backend\Slideshow;
 
 require_once('Slideshow.php');
 
-use Slideshow\Slideshow;
+use Backend\Slideshow\Slideshow;
 
 class CourseSlideshow implements Slideshow {
   private $season;
@@ -70,7 +70,7 @@ class CourseSlideshow implements Slideshow {
   }
 
   public function slideshowFile(string $pageHtml) {
-    $filepath = 'pages';
+    $filepath = __DIR__ . '/../../pages';
     $filename = $this->showFileName;
     $fp = fopen("$filepath/$filename", 'w');
     $result = fwrite($fp, $pageHtml);

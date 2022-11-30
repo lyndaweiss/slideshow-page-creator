@@ -15,7 +15,7 @@ const handleFormSubmit = async ev => {
   const slideshowData = new FormData(slideshowForm);
   slideshowData.append('new_append', ev.target.value);
   slideshowData.append('image_groups', JSON.stringify(imageGroups));
-  const resp = await fetch('create_slideshowpage.php', {
+  const resp = await fetch('backend/create_slideshowpage.php', {
     method: 'POST',
     body: slideshowData,
   });
