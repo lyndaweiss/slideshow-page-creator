@@ -14,18 +14,27 @@
       <p>Thumbnails of chosen images will display below</p>
     </div>
 
-    <form method="post" class="slideshow-form" action="backend/create_slideshowpage.php" enctype="multipart/form-data">
+    <form method="post" class="slideshow-form" action="backend/create_slideshowpage.php" 
+          enctype="multipart/form-data">
       <div class="slideshow-image-preview" id="image-preview"></div>
 
       <div class="slideshow-controls">
         <fieldset class="group-photos-container">
+          <legend>Selected Photos</legend>
+          <p><span id="number-photos-selected">0</span> photos selected</p>
+          <!--
           <label>Add Caption to Group:
             <input type="checkbox" id="name-to-caption">
           </label>
-          <label>Photo Group Caption
-            <input type="text" id="image-group-name" disabled>
+          -->
+          <label>Caption
+            <input type="text" id="image-group-name">
           </label>
-          <button class="slideshow-button" type="button" id="group-images">Group Selected Photos</button>
+          <div class="slideshow-button-group">
+            <button class="slideshow-button" type="button" id="group-images">Group</button>
+            <button class="slideshow-button" type="button" id="caption-images">Caption</button>
+            <button class="slideshow-button" type="button" id="group-caption-images">Group & Caption</button>
+          </div>
         </fieldset>
 
         <div class="slideshow-properties-container">
