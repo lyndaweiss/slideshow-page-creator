@@ -1,14 +1,43 @@
 const imageChooser = document.querySelector('#image-chooser');
 const imagePreview = document.querySelector('#image-preview');
 const slideshowForm = document.querySelector('.slideshow-form');
-const nameToCaption = document.querySelector('#name-to-caption');
-const imageGroupName = document.querySelector('#image-group-name');
-const groupImages = document.querySelector('#group-images');
+const groupCaptionInput = document.querySelector('#image-group-name');
+const numSelectedImages = document.querySelector('#number-photos-selected');
+const groupButton = document.querySelector('#group-images');
+const captionButton = document.querySelector('#caption-images');
+const groupAndCaptionButton = document.querySelector('#group-caption-images');
 const appendSlideshow = document.querySelector('#append-slideshow');
 const createSlideshow = document.querySelector('#create-slideshow');
 
 let selectedThumbnails = {thumbnail: [], name: []};
 let imageGroups = [];
+
+const captionSelected = thumbnails => {
+  thumbnails.forEach (thumbnail => {
+    const thumbnailParent = thumbnail.parentElement;
+    thumbnailParent.querySelector('.caption').value = groupCaptionInput.value;
+  });
+}
+
+const clearSelection = () => {
+  selectedThumbnails.thumbnail.forEach (thumbnail => {
+    thumbnail.classList.remove('selected');
+  });
+  selectedThumbnails.thumbnail = [];
+  selectedThumbnails.name = [];
+  numSelectedImages.textContent = 0;
+  groupCaptionInput.value = '';
+  console.log(imageGroups);
+}
+
+const groupSelected = (thumbnails, imageNames) => {
+  imageGroups.push([...imageNames]);
+  const groupNumber = imageGroups.length - 1;
+  thumbnails.forEach (thumbnail => {
+    const thumbnailParent = thumbnail.parentElement;
+    thumbnailParent.dataset.groupNumber = groupNumber;
+  });
+}
 
 const handleFormSubmit = async ev => {
   ev.preventDefault();
@@ -21,6 +50,20 @@ const handleFormSubmit = async ev => {
   });
   const result = await resp.json();
   console.log(result);
+}
+
+const handleSelectedImagesOp = ev => {
+  const op = ev.target.id;
+  // Group - used Group and Group & Caption buttons
+  if (op === 'group-images' || op === 'group-caption-images') {
+    groupSelected(selectedThumbnails.thumbnail, selectedThumbnails.name);
+  }
+  // Caption - used by Caption and Group & Caption buttons
+  if (op === 'caption-images' || op === 'group-caption-images') {
+    captionSelected(selectedThumbnails.thumbnail);
+  }
+  // Clear selection - used by Group, Caption, Group & Caption buttons
+  clearSelection();
 }
 
 const handleThumbnailDelete = ev => {
@@ -55,11 +98,8 @@ const handleThumbnailClick = ev => {
     selectedThumbnails.thumbnail.push(selected);
     selectedThumbnails.name.push(selected.file.name);
   }
+  numSelectedImages.textContent = selectedThumbnails.thumbnail.length;
 };
-
-const toggleNameToCaption = () => {
-  imageGroupName.disabled = !imageGroupName.disabled;
-}
 
 imageChooser.addEventListener('change', ev => {
   for (let i=0;i<imageChooser.files.length;i++) {
@@ -108,24 +148,9 @@ imageChooser.addEventListener('change', ev => {
   }
 });
 
-nameToCaption.addEventListener('change', toggleNameToCaption);
-
-groupImages.addEventListener('click', () => {
-  imageGroups.push([...selectedThumbnails.name]);
-  const groupNumber = imageGroups.length - 1;
-  selectedThumbnails.thumbnail.forEach (thumbnail => {
-    thumbnail.classList.remove('selected');
-    const thumbnailParent = thumbnail.parentElement;
-    thumbnailParent.dataset.groupNumber = groupNumber;
-    if (!imageGroupName.disabled) {
-      thumbnailParent.querySelector('.caption').value = imageGroupName.value;
-    }
-  });
-  selectedThumbnails.thumbnail = [];
-  selectedThumbnails.name = [];
-  imageGroupName.value = '';
-  console.log(imageGroups);
-});
+groupButton.addEventListener('click', handleSelectedImagesOp);
+captionButton.addEventListener('click', handleSelectedImagesOp);
+groupAndCaptionButton.addEventListener('click', handleSelectedImagesOp);
 
 appendSlideshow.addEventListener('click', handleFormSubmit);
 createSlideshow.addEventListener('click', handleFormSubmit);
