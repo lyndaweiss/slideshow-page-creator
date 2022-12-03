@@ -9,6 +9,7 @@ const groupAndCaptionButton = document.querySelector('#group-caption-images');
 const appendSlideshow = document.querySelector('#append-slideshow');
 const createSlideshow = document.querySelector('#create-slideshow');
 
+let draggedThumbnail;
 let selectedThumbnails = {thumbnail: [], name: []};
 let imageGroups = [];
 
@@ -37,6 +38,22 @@ const groupSelected = (thumbnails, imageNames) => {
     const thumbnailParent = thumbnail.parentElement;
     thumbnailParent.dataset.groupNumber = groupNumber;
   });
+}
+
+const handleThumbnailDragEnter = ev => {
+  ev.preventDefault();
+}
+
+const handleThumbnailDragOver = ev => {
+  ev.preventDefault();
+}
+
+const handleThumbnailDragStart = ev => {
+  draggedThumbnail = ev.target;
+}
+
+const handleThumbnailDrop = ev => {
+  imagePreview.insertBefore(draggedThumbnail, ev.target);
 }
 
 const handleFormSubmit = async ev => {
@@ -106,6 +123,11 @@ imageChooser.addEventListener('change', ev => {
     const thumbnailContainer = document.createElement('div');
     thumbnailContainer.tabIndex = -1;
     thumbnailContainer.classList.add('thumbnail-container');
+    thumbnailContainer.draggable = true;
+    thumbnailContainer.addEventListener('dragenter', handleThumbnailDragEnter);
+    thumbnailContainer.addEventListener('dragover', handleThumbnailDragOver);
+    thumbnailContainer.addEventListener('dragstart', handleThumbnailDragStart);
+    thumbnailContainer.addEventListener('drop', handleThumbnailDrop);
     imagePreview.appendChild(thumbnailContainer);
 
     // Add delete button
