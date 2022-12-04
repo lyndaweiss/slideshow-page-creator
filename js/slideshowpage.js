@@ -40,6 +40,22 @@ const groupSelected = (thumbnails, imageNames) => {
   });
 }
 
+const getDragDropContainer = target => {
+  let targetThumbnailContainer;
+  // No matter which element in the container is grabbed, the whole container should be dragged/dropped
+  if (target.classList.contains('thumbnail-container')) {
+    targetThumbnailContainer = target;
+  } else if (target.classList.contains('caption')) {
+    // item grabbed is caption input, whose parent is a label, whose parent is the container
+    targetThumbnailContainer = target.parentElement.parentElement;
+  } else {
+    // item grabbed is child of the container
+    targetThumbnailContainer = target.parentElement;
+  }
+
+  return targetThumbnailContainer;
+}
+
 const handleThumbnailDragEnter = ev => {
   ev.preventDefault();
 }
@@ -49,11 +65,12 @@ const handleThumbnailDragOver = ev => {
 }
 
 const handleThumbnailDragStart = ev => {
-  draggedThumbnail = ev.target;
+  draggedThumbnail = getDragDropContainer(ev.target);
 }
 
 const handleThumbnailDrop = ev => {
-  imagePreview.insertBefore(draggedThumbnail, ev.target);
+  dropTarget = getDragDropContainer(ev.target);
+  imagePreview.insertBefore(draggedThumbnail, dropTarget);
 }
 
 const handleFormSubmit = async ev => {
