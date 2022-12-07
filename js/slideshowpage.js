@@ -10,9 +10,16 @@ const appendSlideshow = document.querySelector('#append-slideshow');
 const createSlideshow = document.querySelector('#create-slideshow');
 
 let draggedThumbnail;
+let draggedThumbnailGroup = -1;
+let droppedOnThumbnailGroup = -1;
+let draggedThumbnailIndex = -1;
+let droppedOnThumbnailIndex = -1;
+let draggedImageName = '';
+
 let selectedThumbnails = {thumbnail: [], name: []};
 let imageGroups = [];
 
+// Selected images functions
 const captionSelected = thumbnails => {
   thumbnails.forEach (thumbnail => {
     const thumbnailParent = thumbnail.parentElement;
@@ -40,6 +47,7 @@ const groupSelected = (thumbnails, imageNames) => {
   });
 }
 
+// Drag and drop functions
 const getDragDropContainer = target => {
   let targetThumbnailContainer;
   // No matter which element in the container is grabbed, the whole container should be dragged/dropped
@@ -56,6 +64,53 @@ const getDragDropContainer = target => {
   return targetThumbnailContainer;
 }
 
+const resetDragDropParameters = () => {
+  draggedThumbnailGroup = -1;
+  droppedOnThumbnailGroup = -1;
+  draggedThumbnailIndex = -1;
+  droppedOnThumbnailIndex = -1;
+  draggedImageName = '';
+}
+
+// Image group functions used in drag and drop
+const groupIndex = (thumbnail, groupNumber) => {
+    // get index of this thumbnail in the group
+    const group = document.querySelectorAll(`.thumbnail-container[data-group-number="${groupNumber}"]`);
+    const indexInGroup = [...group].indexOf(thumbnail);
+    return indexInGroup;
+}
+
+const isAtGroupEnd = (target, groupNumber) => {
+  const thumbnailContainers = document.querySelectorAll('.thumbnail-container');
+  const dropIndex = [...thumbnailContainers].indexOf(target);
+  if (dropIndex - 1 < 0 || thumbnailContainers[dropIndex - 1].dataset.groupNumber !== groupNumber) {
+    return false;
+  }
+  return true;
+}
+
+const pushToGroupEnd = (groupNumber, oldIndex) => {
+  draggedImageName = imageGroups[groupNumber][oldIndex];
+  // Insert at end of image group
+  imageGroups[groupNumber].push(draggedImageName);
+  // Remove from old index
+  imageGroups[groupNumber].splice(oldIndex, 1);
+}
+
+const reorderGroup = (target, targetGroup, oldIndex) => {
+  const newIndex = groupIndex(target, targetGroup);
+  draggedImageName = imageGroups[targetGroup][oldIndex];
+  // Insert at new index
+  imageGroups[targetGroup].splice(newIndex, 0, draggedImageName);
+  // Remove from old index
+  if (newIndex > oldIndex) {
+    imageGroups[targetGroup].splice(oldIndex, 1);
+  } else {
+    imageGroups[targetGroup].splice(oldIndex + 1, 1);
+  }
+}
+
+// Event Handlers
 const handleThumbnailDragEnter = ev => {
   ev.preventDefault();
 }
@@ -66,11 +121,40 @@ const handleThumbnailDragOver = ev => {
 
 const handleThumbnailDragStart = ev => {
   draggedThumbnail = getDragDropContainer(ev.target);
+  
+  draggedThumbnailGroup = draggedThumbnail.dataset.groupNumber;
+  if (draggedThumbnailGroup >= 0) {
+    draggedThumbnailIndex = groupIndex(draggedThumbnail, draggedThumbnailGroup);
+  }
 }
 
 const handleThumbnailDrop = ev => {
   dropTarget = getDragDropContainer(ev.target);
+
+  let okToMove = false;
+  // Determine if image is part of a group - if it is, determine if its new location
+  // is part of the same group
+  droppedOnThumbnailGroup = dropTarget.dataset.groupNumber;
+  if (droppedOnThumbnailGroup == draggedThumbnailGroup && draggedThumbnailIndex >= 0) {
+    reorderGroup(dropTarget, droppedOnThumbnailGroup, draggedThumbnailIndex);
+    okToMove = true;
+  } else if (draggedThumbnailGroup >= 0 && isAtGroupEnd(dropTarget, draggedThumbnailGroup)) {
+    pushToGroupEnd(draggedThumbnailGroup, draggedThumbnailIndex);
+    okToMove = true;
+  } else if (draggedThumbnailGroup == -1 && droppedOnThumbnailGroup == -1) {
+    // If neither the dragged image or the drop target are part of a group, it's OK to move
+    okToMove = true;
+  }
+
+  if (!okToMove) {
+    console.log('Illegal Move');
+    return;
+  }
+
   imagePreview.insertBefore(draggedThumbnail, dropTarget);
+
+  // Reset drag,drop indexes and groups
+  resetDragDropParameters();
 }
 
 const handleFormSubmit = async ev => {
@@ -141,6 +225,7 @@ imageChooser.addEventListener('change', ev => {
     thumbnailContainer.tabIndex = -1;
     thumbnailContainer.classList.add('thumbnail-container');
     thumbnailContainer.draggable = true;
+    thumbnailContainer.dataset.groupNumber = -1;
     thumbnailContainer.addEventListener('dragenter', handleThumbnailDragEnter);
     thumbnailContainer.addEventListener('dragover', handleThumbnailDragOver);
     thumbnailContainer.addEventListener('dragstart', handleThumbnailDragStart);
