@@ -192,7 +192,7 @@ const handleThumbnailDelete = ev => {
   selectedThumbnails.thumbnail.splice(thumbnailNameIndex, 1);
   selectedThumbnails.name.splice(thumbnailNameIndex, 1);
   // If image is in a group - find and remove
-  if ('groupNumber' in selectedThumbnail.dataset) {
+  if (selectedThumbnail.dataset.groupNumber >= 0) {
     const groupIndex = parseInt(selectedThumbnail.dataset.groupNumber);
     const imageIndex = imageGroups[groupIndex].indexOf(thumbnailImage);
     imageGroups[groupIndex].splice(imageIndex, 1);
@@ -217,7 +217,39 @@ const handleThumbnailClick = ev => {
     selectedThumbnails.name.push(selected.file.name);
   }
   numSelectedImages.textContent = selectedThumbnails.thumbnail.length;
+}
+
+// Image previewer click event handlers
+const imagePreviewClickHandlers = {
+  'button': handleThumbnailDelete,
+  'img': handleThumbnailClick,
 };
+
+imagePreview.addEventListener('click', ev => {
+  const handlerType = ev.target.tagName.toLowerCase();
+  if (handlerType in imagePreviewClickHandlers) {
+    imagePreviewClickHandlers[handlerType](ev);
+  }
+});
+
+// Image previewer drag and drop event handlers
+const imagePreviewDragDropHandlers = {
+  'dragenter': handleThumbnailDragEnter,
+  'dragover': handleThumbnailDragOver,
+  'dragstart': handleThumbnailDragStart,
+  'drop': handleThumbnailDrop,
+};
+
+const handleThumbnailDragDropOp = ev => {
+  if (ev.target.id !== 'image-preview') {
+    imagePreviewDragDropHandlers[ev.type](ev);
+  }
+}
+
+imagePreview.addEventListener('dragenter', handleThumbnailDragDropOp);
+imagePreview.addEventListener('dragover', handleThumbnailDragDropOp);
+imagePreview.addEventListener('dragstart', handleThumbnailDragDropOp);
+imagePreview.addEventListener('drop', handleThumbnailDragDropOp);
 
 imageChooser.addEventListener('change', ev => {
   for (let i=0;i<imageChooser.files.length;i++) {
@@ -226,10 +258,6 @@ imageChooser.addEventListener('change', ev => {
     thumbnailContainer.classList.add('thumbnail-container');
     thumbnailContainer.draggable = true;
     thumbnailContainer.dataset.groupNumber = -1;
-    thumbnailContainer.addEventListener('dragenter', handleThumbnailDragEnter);
-    thumbnailContainer.addEventListener('dragover', handleThumbnailDragOver);
-    thumbnailContainer.addEventListener('dragstart', handleThumbnailDragStart);
-    thumbnailContainer.addEventListener('drop', handleThumbnailDrop);
     imagePreview.appendChild(thumbnailContainer);
 
     // Add delete button
@@ -237,7 +265,6 @@ imageChooser.addEventListener('change', ev => {
     deleteButton.classList.add('slideshow-button', 'delete-button')
     deleteButton.type = 'button';
     deleteButton.ariaLabel = 'Remove Thumbnail';
-    deleteButton.addEventListener('click', handleThumbnailDelete);
     thumbnailContainer.appendChild(deleteButton);
 
     const photoFile = imageChooser.files[i];
@@ -249,8 +276,6 @@ imageChooser.addEventListener('change', ev => {
     const imageReader = new FileReader();
     imageReader.addEventListener('load', ev => photo.src = ev.target.result);
     imageReader.readAsDataURL(photoFile);
-
-    photo.addEventListener('click', handleThumbnailClick);
 
     // Add hidden input with image file name
     const imageName = document.createElement('input');
