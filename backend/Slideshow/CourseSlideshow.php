@@ -36,7 +36,7 @@ class CourseSlideshow implements Slideshow {
 
   public function slideshowTemplate() {
     if ($this->newAppend === 'append') {
-      return file_get_contents(__DIR__ . "/../pages/" . $this->showFileName);    
+      return file_get_contents(__DIR__ . "/../../pages/" . $this->showFileName);    
     }
     return file_get_contents(__DIR__ . "/../templates/course.html");    
   }
