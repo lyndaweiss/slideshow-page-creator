@@ -1,4 +1,5 @@
 const imageChooser = document.querySelector('#image-chooser');
+const clearPhotosButton = document.querySelector('#clear-photos');
 const imagePreview = document.querySelector('#image-preview');
 const slideshowForm = document.querySelector('.slideshow-form');
 const groupCaptionInput = document.querySelector('#image-group-name');
@@ -18,6 +19,22 @@ let draggedImageName = '';
 
 let selectedThumbnails = {thumbnail: [], name: []};
 let imageGroups = [];
+
+const deleteThumbnail = thumbnail => {
+  const thumbnailImage = thumbnail.children.namedItem('image_names[]').value;
+  const thumbnailNameIndex = selectedThumbnails.name.indexOf(thumbnailImage);
+  // remove from selectedThumbnails
+  selectedThumbnails.thumbnail.splice(thumbnailNameIndex, 1);
+  selectedThumbnails.name.splice(thumbnailNameIndex, 1);
+  // If image is in a group - find and remove
+  if (thumbnail.dataset.groupNumber >= 0) {
+    const groupIndex = parseInt(thumbnail.dataset.groupNumber);
+    const imageIndex = imageGroups[groupIndex].indexOf(thumbnailImage);
+    imageGroups[groupIndex].splice(imageIndex, 1);
+  }
+  // remove thumbnail container and children
+  thumbnail.remove();
+}
 
 // Selected images functions
 const captionSelected = thumbnails => {
@@ -111,6 +128,16 @@ const reorderGroup = (target, targetGroup, oldIndex) => {
 }
 
 // Event Handlers
+const handleClearPhotos = ev => {
+  const thumbnails = [...imagePreview.children];
+  thumbnails.forEach(thumbnail => deleteThumbnail(thumbnail));
+}
+
+const handleThumbnailDelete = ev => {
+  const selectedThumbnail = ev.target.parentElement;
+  deleteThumbnail(selectedThumbnail);
+}
+
 const handleThumbnailDragEnter = ev => {
   ev.preventDefault();
 }
@@ -184,23 +211,6 @@ const handleSelectedImagesOp = ev => {
   clearSelection();
 }
 
-const handleThumbnailDelete = ev => {
-  const selectedThumbnail = ev.target.parentElement;
-  const thumbnailImage = selectedThumbnail.children.namedItem('image_names[]').value;
-  const thumbnailNameIndex = selectedThumbnails.name.indexOf(thumbnailImage);
-  // remove from selectedThumbnails
-  selectedThumbnails.thumbnail.splice(thumbnailNameIndex, 1);
-  selectedThumbnails.name.splice(thumbnailNameIndex, 1);
-  // If image is in a group - find and remove
-  if (selectedThumbnail.dataset.groupNumber >= 0) {
-    const groupIndex = parseInt(selectedThumbnail.dataset.groupNumber);
-    const imageIndex = imageGroups[groupIndex].indexOf(thumbnailImage);
-    imageGroups[groupIndex].splice(imageIndex, 1);
-  }
-  // remove thumbnail container and children
-  selectedThumbnail.remove();
-}
-
 const handleThumbnailClick = ev => {
   const selected = ev.target;
 
@@ -219,7 +229,9 @@ const handleThumbnailClick = ev => {
   numSelectedImages.textContent = selectedThumbnails.thumbnail.length;
 }
 
-// Image previewer click event handlers
+// Assign Event Handlers
+clearPhotosButton.addEventListener('click', handleClearPhotos);
+
 const imagePreviewClickHandlers = {
   'button': handleThumbnailDelete,
   'img': handleThumbnailClick,
@@ -232,7 +244,6 @@ imagePreview.addEventListener('click', ev => {
   }
 });
 
-// Image previewer drag and drop event handlers
 const imagePreviewDragDropHandlers = {
   'dragenter': handleThumbnailDragEnter,
   'dragover': handleThumbnailDragOver,
