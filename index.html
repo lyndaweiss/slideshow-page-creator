@@ -9,8 +9,11 @@
   </head>
   <body>
     <div class="image-file-chooser">
-      <label class="slideshow-button" for="image-chooser">Choose Photos</label>
-      <input type="file" id="image-chooser" name="image_chooser[]" multiple>
+      <div class="slideshow-button-group">
+        <button class="slideshow-button outline-secondary" type="button">Clear Photos</button>
+        <label class="slideshow-button filled-secondary" for="image-chooser">Choose Photos</label>
+        <input type="file" id="image-chooser" name="image_chooser[]" multiple>
+      </div>
       <p>Thumbnails of chosen images will display below</p>
     </div>
 

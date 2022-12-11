@@ -17,6 +17,7 @@ fieldset {
   margin: 0;
 }
 
+/* Button Classes */
 .slideshow-button {
   width: fit-content;
   font-size: 1rem;
@@ -25,21 +26,30 @@ fieldset {
   cursor: pointer;
 }
 
+.filled-secondary {
+  color: white;
+  background-color: var(--secondary-color-purple);
+}
+
+.outline-secondary {
+  color: var(--secondary-color-purple);
+  background-color: white;
+  border: 1px solid var(--secondary-color-purple);
+}
+
+/*  */
 .image-file-chooser {
   display: block;
   width: 26.625rem;
   margin: 1rem auto;
 }
 
-.image-file-chooser > label {
+.image-file-chooser > .slideshow-button-group > label {
   display: block;
-  color: white;
-  background-color: var(--secondary-color-purple);
-  margin-left: auto;
-  margin-right: auto;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.image-file-chooser > input[type="file"] {
+.image-file-chooser > .slideshow-button-group > input[type="file"] {
   width: 0;
   height: 0;
   border: none;
@@ -142,7 +152,6 @@ fieldset {
   display: flex;
   flex-direction: column;
   gap: .5rem;
-  width: 15rem;
 }
 
 .group-photos-container > p {
@@ -237,7 +246,6 @@ fieldset {
   display: flex;
   justify-content: center;
   gap: .5rem;
-  width: 15rem;
   padding: .5rem .75rem;
 }
 
