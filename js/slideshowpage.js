@@ -36,6 +36,11 @@ const deleteThumbnail = thumbnail => {
   thumbnail.remove();
 }
 
+const resetImageGroupParameters = () => {
+  selectedThumbnails = {thumbnail: [], name: []};
+  imageGroups = [];
+}
+
 // Selected images functions
 const captionSelected = thumbnails => {
   thumbnails.forEach (thumbnail => {
@@ -131,6 +136,7 @@ const reorderGroup = (target, targetGroup, oldIndex) => {
 const handleClearPhotos = ev => {
   const thumbnails = [...imagePreview.children];
   thumbnails.forEach(thumbnail => deleteThumbnail(thumbnail));
+  resetImageGroupParameters();
 }
 
 const handleThumbnailDelete = ev => {
