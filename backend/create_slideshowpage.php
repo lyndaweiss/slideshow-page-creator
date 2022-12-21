@@ -1,11 +1,15 @@
 <?php
   // error_reporting(E_ALL);
   // ini_set('display_errors', 1);
-
+  
+  require __DIR__.'/vendor/autoload.php';
+  
   require('Slideshow/SlideshowValidator.php');
   require('Slideshow/SlideshowService.php');
   require('Slideshow/CourseSlideshow.php');
   require('Slideshow/TripSlideshow.php');
+  
+  use Dotenv\Dotenv;
 
   use Backend\Slideshow\SlideshowService;
   use Backend\Slideshow\SlideshowValidator;
@@ -14,12 +18,6 @@
     'Course' => 'Backend\\Slideshow\\CourseSlideshow',
     'Trip' => 'Backend\\Slideshow\\TripSlideshow',
   ];
-
-  // echo json_encode([
-  //   'post' => $_POST, 
-  // ]);
-
-  // die();
 
   // Validate input
   $validator = new SlideshowValidator();
@@ -46,29 +44,25 @@
   $validatedCourseInputs['caption'] = $validator->sanitizeArray($_POST['caption']);
   $validatedCourseInputs['image_names'] = $validator->sanitizeArray($_POST['image_names']);
   $validatedCourseInputs['image_groups'] = $_POST['image_groups'];
+  $validatedCourseInputs['image_files'] = $_FILES['image_files'];
 
-  $slideshow = new $slideshows[$validatedCourseInputs['slideshow_type']]($validatedCourseInputs);
+  $type = $validatedCourseInputs['slideshow_type'];
+  // Load environment based on slideshow type
+  $dotenv = Dotenv::createImmutable(__DIR__, "$type.env");
+  $dotenv->load();
+
+  $slideshow = new $slideshows[$type]($validatedCourseInputs);
   $slideshowService = new SlideshowService($slideshow);
   $slideshowCreated = $slideshowService->createSlideshow();
-  echo json_encode($slideshowCreated);
+  // echo json_encode($slideshowCreated);
   
-  // echo json_encode([
-  //   'post' => $_POST, 
+  echo json_encode([
+    'post' => $_POST, 
+    'files' => $_FILES,
+    'env' => $_ENV,
   //   'validated' => $validatedCourseInputs,
     // 'html' => $slideshow,
     // 'bytes' => $bytes_written
-  // ]);
+  ]);
 
-  // Copy image files to webpage image directory
-  /*
-  foreach ($image_files["error"] as $key => $error) {
-    if ($error == UPLOAD_ERR_OK) {
-        $tmp_name = $image_files["tmp_name"][$key];
-        // basename() may prevent filesystem traversal attacks;
-        // further validation/sanitation of the filename may be appropriate
-        $name = basename($image_files["name"][$key]);
-        move_uploaded_file($tmp_name, "$image_directory/$name");
-    }
-  }
-  */
 ?>

@@ -1,9 +1,11 @@
 <?php
 namespace Backend\Slideshow;
-
+  
 require_once('Slideshow.php');
 
-use Backend\Slideshow\Slideshow;
+use Backend\Slideshow\Slideshow;  
+use Backend\Slideshow\SlideshowService;
+use Backend\Slideshow\SlideshowValidator;
 
 class CourseSlideshow implements Slideshow {
   private $season;
@@ -17,6 +19,7 @@ class CourseSlideshow implements Slideshow {
   private $imageGroups;
   private $newAppend;
   private $showFileName;
+  private $showImageFiles;
 
   public function __construct($slideData) {
     $this->season = $slideData['season'];
@@ -32,6 +35,8 @@ class CourseSlideshow implements Slideshow {
 
     $this->showFileName = $this->organization . $this->minGrade . "-" . $this->maxGrade . $this->day . 
                           $this->classTime . $this->season . $this->year . ".html";
+
+    $this->showImageFiles = $slideData['image_files'];
   }
 
   public function slideshowTemplate() {
@@ -69,8 +74,24 @@ class CourseSlideshow implements Slideshow {
     return $pageHtml;
   }
 
+  public function copySlideshowImages() {
+    // Copy image files to webpage image directory
+    $imagepath = $_ENV['IMAGES_DIR'] . '/' . $this->season . $this->year . '/' . $this->organization . 
+                  $this->minGrade . "-" . $this->maxGrade . $this->day . $this->classTime;
+    $imagefiles = $this->showImageFiles;
+    foreach ($imagefiles["error"] as $key => $error) {
+      if ($error == UPLOAD_ERR_OK) {
+          $tmp_name = $imagefiles["tmp_name"][$key];
+          // basename() may prevent filesystem traversal attacks;
+          // further validation/sanitation of the filename may be appropriate
+          $name = basename($imagefiles["name"][$key]);
+          move_uploaded_file($tmp_name, "$imagepath/$name");
+      }
+    }
+  }
+
   public function slideshowFile(string $pageHtml) {
-    $filepath = __DIR__ . '/../../pages';
+    $filepath = $_ENV['PAGES_DIR'];
     $filename = $this->showFileName;
     $fp = fopen("$filepath/$filename", 'w');
     $result = fwrite($fp, $pageHtml);

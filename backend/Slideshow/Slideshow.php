@@ -14,5 +14,6 @@ interface Slideshow {
 
   public function slideshowTemplate();
   public function addSlides($pageHtml);
+  public function copySlideshowImages();
   public function slideshowFile(string $pageHtml);
 }

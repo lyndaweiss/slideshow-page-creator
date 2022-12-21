@@ -10,12 +10,14 @@ class TripSlideshow implements Slideshow {
   private $captions;
   private $location;
   private $year;
+  private $showImageFiles;
 
   public function __construct($slideData) {
     $this->imageNames = $slideData['image_names'];
     $this->captions = $slideData['caption'];
     $this->location = $slideData['location'];
     $this->year = $slideData['year'];
+    $this->showImageFiles = $slideData['image_files'];
   }
 
   public function slideshowTemplate() {
@@ -40,6 +42,21 @@ class TripSlideshow implements Slideshow {
     }
 
     return $pageHtml;
+  }
+
+  public function copySlideshowImages() {
+    // Copy image files to webpage image directory
+    $imagepath = $_ENV['IMAGES_DIR'];
+    $imagefiles = $this->showImageFiles;
+    foreach ($imagefiles["error"] as $key => $error) {
+      if ($error == UPLOAD_ERR_OK) {
+          $tmp_name = $imagefiles["tmp_name"][$key];
+          // basename() may prevent filesystem traversal attacks;
+          // further validation/sanitation of the filename may be appropriate
+          $name = basename($imagefiles["name"][$key]);
+          move_uploaded_file($tmp_name, "$imagepath/$name");
+      }
+    }
   }
 
   public function slideshowFile(string $pageHtml) {
