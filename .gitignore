@@ -4,3 +4,4 @@ pages/*
 trips/*
 backend/vendor/*
 backend/Course.env
+backend/Trip.env

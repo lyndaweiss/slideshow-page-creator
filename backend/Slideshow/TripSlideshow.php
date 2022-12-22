@@ -9,6 +9,7 @@ class TripSlideshow implements Slideshow {
   private $imageNames;
   private $captions;
   private $location;
+  private $trimmedLocation;
   private $year;
   private $showImageFiles;
 
@@ -16,6 +17,7 @@ class TripSlideshow implements Slideshow {
     $this->imageNames = $slideData['image_names'];
     $this->captions = $slideData['caption'];
     $this->location = $slideData['location'];
+    $this->trimmedLocation = str_replace(' ', '', $this->location);
     $this->year = $slideData['year'];
     $this->showImageFiles = $slideData['image_files'];
   }
@@ -25,10 +27,9 @@ class TripSlideshow implements Slideshow {
   }
 
   public function addSlides($pageHtml) {
-    $trimmedLocation = str_replace(' ', '', $this->location);
-    $imagePath = "photography/" . $this->year . "$trimmedLocation/images/";
+    $imagepath = 'photography/' . $this->year . $this->trimmedLocation . '/images';
     foreach($this->imageNames as $index => $name) {
-      $image_src = $imagePath . $name;
+      $image_src = "$imagepath/$name";
 
       // Slide html
       $slideHtml = Slideshow::SLIDE_START;
@@ -46,7 +47,7 @@ class TripSlideshow implements Slideshow {
 
   public function copySlideshowImages() {
     // Copy image files to webpage image directory
-    $imagepath = $_ENV['IMAGES_DIR'];
+    $imagepath = $_ENV['IMAGES_DIR'] . '/' . $this->year . $this->trimmedLocation . '/images';
     $imagefiles = $this->showImageFiles;
     foreach ($imagefiles["error"] as $key => $error) {
       if ($error == UPLOAD_ERR_OK) {
@@ -60,8 +61,8 @@ class TripSlideshow implements Slideshow {
   }
 
   public function slideshowFile(string $pageHtml) {
-    $filepath = __DIR__ . '/../../trips';
-    $filename = $this->year . str_replace(' ', '', $this->location) . "_slideshow.html";
+    $filepath = $_ENV['PAGES_DIR'] . '/' . $this->year . $this->trimmedLocation;
+    $filename = $this->year . $this->trimmedLocation . "_slideshow.html";
     $fp = fopen("$filepath/$filename", 'w');
     $result = fwrite($fp, $pageHtml);
     fclose($fp);
