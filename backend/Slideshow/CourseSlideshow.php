@@ -41,7 +41,8 @@ class CourseSlideshow implements Slideshow {
 
   public function slideshowTemplate() {
     if ($this->newAppend === 'append') {
-      return file_get_contents(__DIR__ . "/../../pages/" . $this->showFileName);    
+      $pagesPath = $_ENV['PAGES_DIR'] . '/';
+      return file_get_contents($pagesPath . $this->showFileName);    
     }
     return file_get_contents(__DIR__ . "/../templates/course.html");    
   }
@@ -86,13 +87,15 @@ class CourseSlideshow implements Slideshow {
     // Get unique project names and their indices
     $projectNames = array_unique($this->captions);
     $linksHtml = '';
+    $keyOffset = substr_count($pageHtml, Slideshow::SLIDE_START);
     foreach($projectNames as $key => $name) {
-      $linksHtml .= "\n\t<a href=\"\" data-index=\"$key\">$name</a>";
+      $linkIndex = $key + $keyOffset;
+      $linksHtml .= "\t<a href=\"\" data-index=\"$linkIndex\">$name</a>\n";
     }
     
     // Insert links html into page html
-    $linksStartHtml = "<div class=\"carousel-nav\">";
-    $linksPos = strpos($pageHtml, $linksStartHtml) + strlen($linksStartHtml);
+    $linksEndHtml = "</div><!-- end of links section  -->";
+    $linksPos = strpos($pageHtml, $linksEndHtml); //+ strlen($linksStartHtml);
     $pageHtml = substr_replace($pageHtml, $linksHtml, $linksPos, 0);
 
     return $pageHtml;
