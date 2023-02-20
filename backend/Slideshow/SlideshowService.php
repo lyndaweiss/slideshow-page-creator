@@ -14,7 +14,7 @@ class SlideshowService {
 
   public function createSlideshow() {
     $pageHtml = $this->slideshow->slideshowTemplate();
-    $pageHtml = $this->slideshow->addSlides($pageHtml);
+    $pageHtml = $this->slideshow->addSlideshowHtml($pageHtml);
     $slideshowCreated = $this->slideshow->slideshowFile($pageHtml);
     $this->slideshow->copySlideshowImages();
     return $slideshowCreated;

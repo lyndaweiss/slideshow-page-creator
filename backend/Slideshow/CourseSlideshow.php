@@ -46,7 +46,7 @@ class CourseSlideshow implements Slideshow {
     return file_get_contents(__DIR__ . "/../templates/course.html");    
   }
 
-  public function addSlides($pageHtml) {
+  public function addSlideshowHtml($pageHtml) {
     $imagePath = "images/" . $this->season . $this->year . "/" . $this->organization . $this->minGrade . "-" . $this->maxGrade . $this->day . $this->classTime;
     $caption_index = 0;
     foreach($this->imageGroups as $group) {

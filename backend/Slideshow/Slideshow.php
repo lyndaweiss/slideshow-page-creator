@@ -13,7 +13,7 @@ interface Slideshow {
   const SLIDE_IMAGE_END = "\" alt=\"\">";
 
   public function slideshowTemplate();
-  public function addSlides($pageHtml);
+  public function addSlideshowHtml($pageHtml);
   public function copySlideshowImages();
   public function slideshowFile(string $pageHtml);
 }

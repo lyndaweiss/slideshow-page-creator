@@ -26,7 +26,7 @@ class TripSlideshow implements Slideshow {
     return file_get_contents(__DIR__ . "/../templates/trip.html");    
   }
 
-  public function addSlides($pageHtml) {
+  public function addSlideshowHtml($pageHtml) {
     $imagepath = 'photography/' . $this->year . $this->trimmedLocation . '/images';
     foreach($this->imageNames as $index => $name) {
       $image_src = "$imagepath/$name";
