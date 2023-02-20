@@ -47,6 +47,10 @@ class CourseSlideshow implements Slideshow {
   }
 
   public function addSlideshowHtml($pageHtml) {
+    // Add start of project links to top of slideshow page
+    $pageHtml = $this->addLinks($pageHtml);
+
+    // Add slideshow
     $imagePath = "images/" . $this->season . $this->year . "/" . $this->organization . $this->minGrade . "-" . $this->maxGrade . $this->day . $this->classTime;
     $caption_index = 0;
     foreach($this->imageGroups as $group) {
@@ -97,5 +101,22 @@ class CourseSlideshow implements Slideshow {
     $result = fwrite($fp, $pageHtml);
     fclose($fp);
     return $result;
+  }
+
+  // Private methods
+  private function addLinks(string $pageHtml) {
+    // Get unique project names and their indices
+    $projectNames = array_unique($this->captions);
+    $linksHtml = '';
+    foreach($projectNames as $key => $name) {
+      $linksHtml .= "\n\t<a href=\"\" data-index=\"$key\">$name</a>";
+    }
+    
+    // Insert links html into page html
+    $linksStartHtml = "<div class=\"carousel-nav\">";
+    $linksPos = strpos($pageHtml, $linksStartHtml) + strlen($linksStartHtml);
+    $pageHtml = substr_replace($pageHtml, $linksHtml, $linksPos, 0);
+
+    return $pageHtml;
   }
 }
