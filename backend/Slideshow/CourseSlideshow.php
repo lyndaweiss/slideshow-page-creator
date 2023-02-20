@@ -50,30 +50,8 @@ class CourseSlideshow implements Slideshow {
     // Add start of project links to top of slideshow page
     $pageHtml = $this->addLinks($pageHtml);
 
-    // Add slideshow
-    $imagePath = "images/" . $this->season . $this->year . "/" . $this->organization . $this->minGrade . "-" . $this->maxGrade . $this->day . $this->classTime;
-    $caption_index = 0;
-    foreach($this->imageGroups as $group) {
-      $num_images = count($group);
-      foreach($group as $key => $value) {
-        $image_src = "$imagePath/$value";
-        $image_num = $key + 1;
-  
-        // Slide html
-        $slideHtml = Slideshow::SLIDE_START;
-        $slideHtml .= Slideshow::SLIDE_CAPTION_START . $this->captions[$caption_index];
-        $slideHtml .= Slideshow::SLIDE_NUM_START . " ($image_num / $num_images) " . Slideshow::SLIDE_NUM_END;
-        $slideHtml .= Slideshow::SLIDE_CAPTION_END;
-        $slideHtml .= Slideshow::SLIDE_IMAGE_START . $image_src . Slideshow::SLIDE_IMAGE_END;
-        $slideHtml .= Slideshow::SLIDE_END;
-  
-        // Insert slide html into page html
-        $slidePos = strpos($pageHtml, "</ul>");
-        $pageHtml = substr_replace($pageHtml, $slideHtml, $slidePos, 0);
-  
-        $caption_index++;
-      }
-    }
+    // Add slideshow image links and captions
+    $pageHtml = $this->addSlides($pageHtml);
 
     return $pageHtml;
   }
@@ -116,6 +94,34 @@ class CourseSlideshow implements Slideshow {
     $linksStartHtml = "<div class=\"carousel-nav\">";
     $linksPos = strpos($pageHtml, $linksStartHtml) + strlen($linksStartHtml);
     $pageHtml = substr_replace($pageHtml, $linksHtml, $linksPos, 0);
+
+    return $pageHtml;
+  }
+
+  private function addSlides(string $pageHtml) {
+    $imagePath = "images/" . $this->season . $this->year . "/" . $this->organization . $this->minGrade . "-" . $this->maxGrade . $this->day . $this->classTime;
+    $caption_index = 0;
+    foreach($this->imageGroups as $group) {
+      $num_images = count($group);
+      foreach($group as $key => $value) {
+        $image_src = "$imagePath/$value";
+        $image_num = $key + 1;
+  
+        // Slide html
+        $slideHtml = Slideshow::SLIDE_START;
+        $slideHtml .= Slideshow::SLIDE_CAPTION_START . $this->captions[$caption_index];
+        $slideHtml .= Slideshow::SLIDE_NUM_START . " ($image_num / $num_images) " . Slideshow::SLIDE_NUM_END;
+        $slideHtml .= Slideshow::SLIDE_CAPTION_END;
+        $slideHtml .= Slideshow::SLIDE_IMAGE_START . $image_src . Slideshow::SLIDE_IMAGE_END;
+        $slideHtml .= Slideshow::SLIDE_END;
+  
+        // Insert slide html into page html
+        $slidePos = strpos($pageHtml, "</ul>");
+        $pageHtml = substr_replace($pageHtml, $slideHtml, $slidePos, 0);
+  
+        $caption_index++;
+      }
+    }
 
     return $pageHtml;
   }
