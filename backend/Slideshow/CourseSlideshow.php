@@ -61,6 +61,9 @@ class CourseSlideshow implements Slideshow {
     // Copy image files to webpage image directory
     $imagepath = $_ENV['IMAGES_DIR'] . '/' . $this->season . $this->year . '/' . $this->organization . 
                   $this->minGrade . "-" . $this->maxGrade . $this->day . $this->classTime;
+    if (!file_exists($imagepath)) {
+      mkdir($imagepath, 0705, true);
+    }
     $imagefiles = $this->showImageFiles;
     foreach ($imagefiles["error"] as $key => $error) {
       if ($error == UPLOAD_ERR_OK) {

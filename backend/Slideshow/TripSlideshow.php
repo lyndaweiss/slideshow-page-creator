@@ -48,6 +48,9 @@ class TripSlideshow implements Slideshow {
   public function copySlideshowImages() {
     // Copy image files to webpage image directory
     $imagepath = $_ENV['IMAGES_DIR'] . '/' . $this->year . $this->trimmedLocation . '/images';
+    if (!file_exists($imagepath)) {
+      mkdir($imagepath, 0705, true);
+    }
     $imagefiles = $this->showImageFiles;
     foreach ($imagefiles["error"] as $key => $error) {
       if ($error == UPLOAD_ERR_OK) {
