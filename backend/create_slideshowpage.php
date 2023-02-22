@@ -15,8 +15,8 @@
   use Backend\Slideshow\SlideshowValidator;
 
   $slideshows = [
-    'Course' => 'Backend\\Slideshow\\CourseSlideshow',
-    'Trip' => 'Backend\\Slideshow\\TripSlideshow',
+    'course' => 'Backend\\Slideshow\\CourseSlideshow',
+    'trip' => 'Backend\\Slideshow\\TripSlideshow',
   ];
 
   // Validate input

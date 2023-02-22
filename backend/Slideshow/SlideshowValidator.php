@@ -2,7 +2,7 @@
   namespace Backend\Slideshow;
 
   class SlideshowValidator {
-    private $slideshowTypes = ['Course', 'Trip'];
+    private $slideshowTypes = ['course', 'trip'];
     private $slideshowOrganizations = ['ABC', 'FLA'];
     private $slideshowDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
     private $slideshowTimes = ['M', 'A'];

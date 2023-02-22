@@ -193,6 +193,8 @@ const handleThumbnailDrop = ev => {
 const handleFormSubmit = async ev => {
   ev.preventDefault();
   const slideshowData = new FormData(slideshowForm);
+  const slideshowType = slideshowData.get('slideshow_type');
+  slideshowData.set('year', document.querySelector(`#${slideshowType}-year`).value);
   slideshowData.append('new_append', ev.target.value);
   slideshowData.append('image_groups', JSON.stringify(imageGroups));
   const imageFiles = imageChooser.files;
